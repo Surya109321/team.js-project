@@ -10,6 +10,8 @@ the system works by monitoring how much work the students do and allowing them t
 <img width="1517" height="730" alt="image" src="https://github.com/user-attachments/assets/cc4ca203-277a-464c-bce5-1e5d47c7ef2f" />
 Later, students can redeem online prizes based on monitoring if the student did the work or not. There are also options for feedback. Teachers can also view everything on the impact page. The rewards are supposed to motivate the students to do the work and give updates so we know how effective the program is.
 <img width="1518" height="727" alt="image" src="https://github.com/user-attachments/assets/e32356ab-2c2b-4b04-aad8-a27cf6f70b51" />
+<img width="1535" height="726" alt="Screenshot3" src="https://github.com/user-attachments/assets/97a4b78a-3f57-491c-840f-da8c56173057" />
+
 
 tech stack
 
