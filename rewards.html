@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rewards | Coding in Color</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <style>
+    :root { --vibrant: #238B45; --leaf: #36AD58; --light: #8FDC9B; --mint: #C4EEC8; --soft: #F0FBF1; --forest: #14532D; --pistachio: #CFF2B8; --sage: #DDF3DC; --ink: #0F3320; --font: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif; }
+    :root[data-theme="forest"] { --vibrant: #1B6F37; --pistachio: #BDEBA6; }
+    :root[data-theme="emerald"] { --vibrant: #17844F; --pistachio: #B8F0D2; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--soft); color: var(--ink); font-family: var(--font); font-size: 1.1rem; line-height: 1.6; }
+    h1, h2, h3 { margin: 0 0 0.5em; line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; }
+    p { margin: 0 0 1rem; }
+    .wrap { max-width: 70rem; margin: 0 auto; padding: 0 1.5rem; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+    header { background: var(--pistachio); }
+    header .wrap { display: flex; justify-content: space-between; align-items: center; padding-top: 1.25rem; padding-bottom: 1.25rem; }
+    .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.03em; color: var(--ink); text-decoration: none; }
+    .logo i { font-style: normal; color: var(--vibrant); }
+    nav a { color: var(--ink); font-weight: 500; text-decoration: none; margin-left: 1.5rem; }
+    .hero { background: var(--pistachio); padding: 2.5rem 0 3.5rem; }
+    .hero .wrap { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; align-items: center; }
+    .hero h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); }
+    .lead { color: #1d4d31; max-width: 40ch; font-size: 1.2rem; }
+    .balance { background: #fff; border-radius: 1.75rem; padding: 1.5rem 2.25rem; box-shadow: 0 0 0 2px var(--mint); text-align: center; }
+    .balance b { display: block; font-size: 4rem; line-height: 1; letter-spacing: -0.04em; color: var(--vibrant); }
+    section { padding: 3rem 0 0; }
+    section h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.25rem; }
+    .card { background: #fff; border-radius: 1.25rem; padding: 1.5rem; box-shadow: 0 0 0 2px var(--mint); display: flex; flex-direction: column; }
+    .card h3 { font-size: 1.3rem; }
+    .cost { font-weight: 800; color: var(--vibrant); margin-bottom: 0.4rem; }
+    .card p { color: #2b5a3f; flex: 1; font-size: 1rem; }
+    .btn { font-family: var(--font); font-weight: 700; font-size: 1.05rem; border: 0; border-radius: 999px; padding: 0.8rem 1.6rem; cursor: pointer; background: var(--vibrant); color: #fff; }
+    .btn:hover { background: var(--forest); }
+    .btn:disabled { background: var(--mint); color: #2b5a3f; cursor: not-allowed; }
+    .msg { background: var(--mint); border-radius: 1rem; padding: 1rem 1.25rem; font-weight: 700; margin-bottom: 1rem; }
+    ul.mine { list-style: none; margin: 0; padding: 0; }
+    ul.mine li { padding: 0.7rem 0; border-top: 1px solid var(--mint); display: flex; justify-content: space-between; gap: 1rem; }
+    ul.mine li:first-child { border-top: 0; }
+    .empty { color: #2b5a3f; margin: 0; }
+    [hidden] { display: none !important; }
+    footer { margin-top: 5rem; background: var(--forest); color: var(--mint); padding: 2.25rem 0; }
+    footer p { margin: 0; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap">
+    <a class="logo" href="index.html">Coding in <i>Color</i></a>
+    <nav><a href="index.html">Home</a><a href="index.html#feedback">Weekly survey</a></nav>
+  </div></header>
+
+  <main>
+    <div class="hero"><div class="wrap">
+      <div>
+        <h1>Rewards</h1>
+        <p class="lead">Finish your weekly survey to earn 10 tokens, then trade them for a prize. Your teacher hands it over.</p>
+      </div>
+      <div class="balance"><b id="bal">0</b>tokens</div>
+    </div></div>
+
+    <section><div class="wrap">
+      <h2>Trade your tokens</h2>
+      <p class="msg" id="msg" hidden></p>
+      <div class="grid" id="shop"></div>
+    </div></section>
+
+    <section><div class="wrap">
+      <h2>My rewards</h2>
+      <div class="card">
+        <ul class="mine" id="mine"></ul>
+        <p class="empty" id="mineEmpty">Nothing yet. Your first prize is just a survey or two away.</p>
+      </div>
+    </div></section>
+  </main>
+
+  <footer><div class="wrap"><p>Coding in Color. Free tech learning for every student.</p></div></footer>
+
+  <script>
+    // Edit this list to change the prizes. cost is in tokens.
+    var REWARDS = [
+      { name: "Late Work Pass", cost: 10, text: "A one-time pass for late work. (It still needs to be submitted)." },
+      { name: "Extra Fun Lesson", cost: 20, text: "A bonus lesson to learn new things" },
+      { name: "Extra Fun Module", cost: 30, text: "More bonus things to increase your knowledge" },
+      { name: "Digital Certificate with your name", cost: 40, text: "A certificate to show your family." },
+      { name: "Coding in Color T-shirt", cost: 60, text: "Wear your color. Ask your teacher for your size." }
+    ];
+    var KEY = "launchpad-v1";
+    var state = { name: "", grade: "", done: {}, feedback: [], tokens: 0, lastSurvey: 0, redeemed: [], theme: "", studentId: "" };
+    try { var s = JSON.parse(localStorage.getItem(KEY)); if (s) state = Object.assign(state, s); } catch (e) {}
+    document.documentElement.setAttribute("data-theme", state.theme || "");
+    var $ = function (id) { return document.getElementById(id); };
+    var armed = -1;
+
+    function save() {
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+      try {
+        fetch("/api/progress", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId: state.studentId, name: state.name, grade: state.grade, done: state.done, tokens: state.tokens, redeemed: state.redeemed }) }).catch(function () {});
+      } catch (e) {}
+    }
+    function fmt(ts) { return new Date(ts).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }); }
+
+    function render() {
+      $("bal").textContent = state.tokens;
+      var shop = $("shop"); shop.innerHTML = "";
+      REWARDS.forEach(function (r, i) {
+        var c = document.createElement("div"), h = document.createElement("h3"), k = document.createElement("div"), p = document.createElement("p"), b = document.createElement("button");
+        c.className = "card"; h.textContent = r.name; k.className = "cost"; k.textContent = r.cost + " tokens"; p.textContent = r.text;
+        b.className = "btn"; b.type = "button";
+        var can = state.tokens >= r.cost;
+        b.disabled = !can;
+        b.textContent = !can ? "Need " + (r.cost - state.tokens) + " more" : armed === i ? "Tap again to confirm" : "Trade tokens";
+        b.addEventListener("click", function () {
+          if (armed !== i) { armed = i; render(); return; }
+          if (state.tokens < r.cost) return;
+          state.tokens -= r.cost;
+          state.redeemed.push({ name: r.name, cost: r.cost, when: Date.now() });
+          armed = -1; save();
+          $("msg").textContent = "You got: " + r.name + ". Show this screen to your teacher to pick it up.";
+          $("msg").hidden = false;
+          render();
+        });
+        c.appendChild(h); c.appendChild(k); c.appendChild(p); c.appendChild(b); shop.appendChild(c);
+      });
+      var mine = $("mine"); mine.innerHTML = "";
+      state.redeemed.slice().reverse().forEach(function (r) {
+        var li = document.createElement("li"), a = document.createElement("strong"), d = document.createElement("span");
+        a.textContent = r.name; d.textContent = r.cost + " tokens Â· " + fmt(r.when);
+        li.appendChild(a); li.appendChild(d); mine.appendChild(li);
+      });
+      $("mineEmpty").hidden = state.redeemed.length > 0;
+    }
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Teacher and donor view | Coding in Color</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <style>
+    :root { --vibrant: #238B45; --leaf: #36AD58; --light: #8FDC9B; --mint: #C4EEC8; --soft: #F0FBF1; --forest: #14532D; --pistachio: #CFF2B8; --ink: #0F3320; --font: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--soft); color: var(--ink); font-family: var(--font); font-size: 1.05rem; line-height: 1.5; }
+    h1, h2 { margin: 0 0 0.5em; line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; }
+    p { margin: 0 0 1rem; }
+    .wrap { max-width: 78rem; margin: 0 auto; padding: 0 1.5rem; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+    header { background: var(--pistachio); }
+    header .wrap { display: flex; justify-content: space-between; align-items: center; padding-top: 1.25rem; padding-bottom: 1.25rem; }
+    .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.03em; color: var(--ink); text-decoration: none; }
+    .logo i { font-style: normal; color: var(--vibrant); }
+    nav a { color: var(--ink); font-weight: 500; text-decoration: none; margin-left: 1.5rem; }
+    .hero { background: var(--pistachio); padding: 2rem 0 3rem; }
+    .hero h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); }
+    .lead { color: #1d4d31; max-width: 55ch; font-size: 1.15rem; }
+    section { padding: 2.5rem 0 0; }
+    section h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); }
+    .card { background: #fff; border-radius: 1.25rem; padding: 1.5rem; box-shadow: 0 0 0 2px var(--mint); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1rem; }
+    .num { display: block; font-size: 2.6rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em; color: var(--vibrant); margin-bottom: 0.3rem; }
+    .scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; min-width: 46rem; font-size: 0.98rem; }
+    th { text-align: left; font-weight: 800; padding: 0.6rem 0.7rem; border-bottom: 3px solid var(--mint); white-space: nowrap; }
+    td { padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--mint); vertical-align: top; }
+    .mini { display: inline-block; vertical-align: middle; width: 6rem; height: 0.7rem; background: var(--mint); border-radius: 999px; overflow: hidden; margin-right: 0.5rem; }
+    .mini span { display: block; height: 100%; background: var(--vibrant); }
+    .btn { font-family: var(--font); font-weight: 700; font-size: 1rem; border: 0; border-radius: 999px; padding: 0.7rem 1.5rem; cursor: pointer; background: var(--vibrant); color: #fff; }
+    .btn:hover { background: var(--forest); }
+    input[type=password], select { font-family: var(--font); font-size: 1.05rem; color: var(--ink); background: #fff; border: 2px solid var(--light); border-radius: 0.8rem; padding: 0.7rem 1rem; }
+    .row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1rem; }
+    .err { color: #a11a1a; font-weight: 700; }
+    .note { color: #2b5a3f; font-size: 0.95rem; }
+    [hidden] { display: none !important; }
+    footer { margin-top: 4rem; background: var(--forest); color: var(--mint); padding: 2rem 0; }
+    footer p { margin: 0; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap">
+    <a class="logo" href="index.html">Coding in <i>Color</i></a>
+    <nav><a href="index.html">Home</a><a href="impact.html">Public impact page</a></nav>
+  </div></header>
+
+  <main>
+    <div class="hero"><div class="wrap">
+      <h1>Teacher and donor view</h1>
+      <p class="lead">Every student's progress, weekly surveys and rewards in one place. This page is private and needs the access password.</p>
+    </div></div>
+
+    <section id="login"><div class="wrap">
+      <form class="card" id="loginForm" style="max-width:26rem">
+        <label for="pw" style="display:block;font-weight:700;margin-bottom:0.4rem">Access password</label>
+        <input type="password" id="pw" autocomplete="current-password" style="width:100%;margin-bottom:1rem">
+        <p class="err" id="loginErr" hidden></p>
+        <button class="btn" type="submit">Open dashboard</button>
+      </form>
+    </div></section>
+
+    <div id="dash" hidden>
+      <section><div class="wrap"><div class="stats" id="stats"></div></div></section>
+
+      <section><div class="wrap">
+        <h2>Students</h2>
+        <div class="card scroll"><table id="studentTable"></table></div>
+      </div></section>
+
+      <section><div class="wrap">
+        <h2>All survey responses</h2>
+        <div class="row">
+          <select id="filter" aria-label="Show one student"></select>
+          <button class="btn" type="button" id="csv">Download CSV</button>
+          <button class="btn" type="button" id="out" style="background:#2b5a3f">Log out</button>
+        </div>
+        <div class="card scroll"><table id="surveyTable"></table></div>
+        <p class="note" style="margin-top:1rem">Students are identified by the first name they typed in. Treat this page as confidential student data.</p>
+      </div></section>
+    </div>
+  </main>
+
+  <footer><div class="wrap"><p>Coding in Color. Free tech learning for every student.</p></div></footer>
+
+  <script>
+    var $ = function (id) { return document.getElementById(id); };
+    var STORE = "cic-admin", key = "", people = [], rows = [];
+    function fmt(ts) { return ts ? new Date(ts).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "-"; }
+    function avg(a) { return a.length ? (a.reduce(function (x, y) { return x + y; }, 0) / a.length).toFixed(1) : "-"; }
+    function cell(tr, text) { var td = document.createElement("td"); td.textContent = text; tr.appendChild(td); return td; }
+    function head(table, cols) {
+      table.innerHTML = "";
+      var tr = document.createElement("tr");
+      cols.forEach(function (c) { var th = document.createElement("th"); th.textContent = c; tr.appendChild(th); });
+      var th = document.createElement("thead"); th.appendChild(tr); table.appendChild(th);
+      var tb = document.createElement("tbody"); table.appendChild(tb); return tb;
+    }
+
+    function load() {
+      fetch("/api/teacher", { headers: { "X-Admin-Key": key } }).then(function (r) {
+        if (r.status === 401) { sessionStorage.removeItem(STORE); throw new Error("pw"); }
+        if (!r.ok) throw new Error("server");
+        return r.json();
+      }).then(render).catch(function (e) {
+        $("dash").hidden = true; $("login").hidden = false;
+        $("loginErr").hidden = false;
+        $("loginErr").textContent = e.message === "pw" ? "That password didn't work." : "Couldn't load the data. Check that the site is deployed and try again.";
+      });
+    }
+
+    function render(d) {
+      $("login").hidden = true; $("dash").hidden = false; $("loginErr").hidden = true;
+      var map = {};
+      d.students.forEach(function (s) { map[s.id] = { id: s.id, name: s.name || "Unnamed student", grade: s.grade, lessons: s.lessons, tokens: s.tokens, redeemed: s.redeemed, updated: s.updated, surveys: [] }; });
+      d.surveys.forEach(function (sv) {
+        if (!map[sv.student_id]) map[sv.student_id] = { id: sv.student_id, name: "Unnamed student", grade: sv.grade, lessons: sv.lessons_done, tokens: 0, redeemed: [], updated: sv.created_at, surveys: [] };
+        map[sv.student_id].surveys.push(sv);
+      });
+      people = Object.keys(map).map(function (k) { return map[k]; });
+      people.sort(function (a, b) { return a.name.localeCompare(b.name); });
+      rows = d.surveys.map(function (sv) { return { sv: sv, name: map[sv.student_id].name }; });
+
+      var allConf = d.surveys.map(function (s) { return s.confidence; }), allRate = d.surveys.map(function (s) { return s.rating; });
+      var stats = [[people.length, "students"], [avg(people.map(function (p) { return p.lessons; })) + " / 18", "average lessons finished"],
+        [people.filter(function (p) { return p.lessons >= 18; }).length, "finished the program"], [d.surveys.length, "surveys completed"],
+        [avg(allConf) + " / 5", "average confidence"], [avg(allRate) + " / 5", "average program rating"]];
+      $("stats").innerHTML = "";
+      stats.forEach(function (s) {
+        var c = document.createElement("div"), n = document.createElement("span"), p = document.createElement("p");
+        c.className = "card"; n.className = "num"; n.textContent = s[0]; p.style.margin = "0"; p.textContent = s[1];
+        c.appendChild(n); c.appendChild(p); $("stats").appendChild(c);
+      });
+
+      var tb = head($("studentTable"), ["Student", "Grade", "Progress", "Confidence (first to latest)", "Rating", "Surveys", "Tokens", "Rewards", "Last active"]);
+      people.forEach(function (p) {
+        var tr = document.createElement("tr"), sv = p.surveys.slice().sort(function (a, b) { return a.created_at - b.created_at; });
+        var b = document.createElement("strong"); var t0 = document.createElement("td"); b.textContent = p.name; t0.appendChild(b); tr.appendChild(t0);
+        cell(tr, p.grade || "-");
+        var tp = document.createElement("td"), bar = document.createElement("span"), fill = document.createElement("span");
+        bar.className = "mini"; fill.style.width = Math.round(p.lessons / 18 * 100) + "%"; bar.appendChild(fill);
+        tp.appendChild(bar); tp.appendChild(document.createTextNode(p.lessons + "/18")); tr.appendChild(tp);
+        cell(tr, !sv.length ? "-" : sv.length === 1 ? String(sv[0].confidence) : sv[0].confidence + " to " + sv[sv.length - 1].confidence);
+        cell(tr, sv.length ? String(sv[sv.length - 1].rating) : "-");
+        cell(tr, String(sv.length));
+        cell(tr, String(p.tokens));
+        cell(tr, p.redeemed.length ? p.redeemed.map(function (r) { return r.name; }).join(", ") : "-");
+        cell(tr, fmt(p.updated));
+        tb.appendChild(tr);
+      });
+
+      var sel = $("filter"); sel.innerHTML = "";
+      var all = document.createElement("option"); all.value = ""; all.textContent = "All students"; sel.appendChild(all);
+      people.forEach(function (p) { var o = document.createElement("option"); o.value = p.id; o.textContent = p.name; sel.appendChild(o); });
+      drawSurveys();
+    }
+
+    function visible() { var f = $("filter").value; return rows.filter(function (r) { return !f || r.sv.student_id === f; }); }
+    function drawSurveys() {
+      var tb = head($("surveyTable"), ["Date", "Student", "Rating", "Confidence", "Time this week", "Lessons", "What helped", "What to change"]);
+      var list = visible();
+      if (!list.length) { var tr0 = document.createElement("tr"); cell(tr0, "No surveys yet.").colSpan = 8; tb.appendChild(tr0); return; }
+      list.forEach(function (r) {
+        var tr = document.createElement("tr"), s = r.sv;
+        cell(tr, fmt(s.created_at)); cell(tr, r.name); cell(tr, String(s.rating)); cell(tr, String(s.confidence));
+        cell(tr, s.hours); cell(tr, s.lessons_done + "/18"); cell(tr, s.liked || ""); cell(tr, s.change_note || "");
+        tb.appendChild(tr);
+      });
+    }
+    $("filter").addEventListener("change", drawSurveys);
+
+    $("csv").addEventListener("click", function () {
+      var q = function (v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; };
+      var out = [["Date", "Student", "Grade", "Rating", "Confidence", "Time this week", "Lessons done", "What helped", "What to change"].map(q).join(",")];
+      visible().forEach(function (r) { var s = r.sv; out.push([fmt(s.created_at), r.name, s.grade, s.rating, s.confidence, s.hours, s.lessons_done, s.liked, s.change_note].map(q).join(",")); });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([out.join("\n")], { type: "text/csv" }));
+      a.download = "coding-in-color-surveys.csv"; document.body.appendChild(a); a.click(); a.remove();
+    });
+
+    $("out").addEventListener("click", function () { sessionStorage.removeItem(STORE); location.reload(); });
+    $("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault(); key = $("pw").value; if (!key) return;
+      try { sessionStorage.setItem(STORE, key); } catch (err) {}
+      load();
+    });
+    try { key = sessionStorage.getItem(STORE) || ""; } catch (e) {}
+    if (key) load();
+  </script>
+</body>
+</html>

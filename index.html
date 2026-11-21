@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coding in Color: learn tech from zero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --vibrant: #238B45; --leaf: #36AD58; --spring: #62C875; --light: #8FDC9B; --mint: #C4EEC8; --soft: #F0FBF1;
+      --deep: #1B6F37; --ink: #0F3320; --off: #DCE6DE;
+      --forest: #14532D; --emerald: #1FA463; --pistachio: #CFF2B8; --sage: #DDF3DC;
+      --font: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--soft); color: var(--ink); font-family: var(--font); font-size: 1.1rem; line-height: 1.6; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    h1, h2, h3 { margin: 0 0 0.5em; line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; }
+    p { margin: 0 0 1rem; }
+    .wrap { max-width: 70rem; margin: 0 auto; padding: 0 1.5rem; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+    header { background: var(--pistachio); }
+    header .wrap { display: flex; justify-content: space-between; align-items: center; padding-top: 1.25rem; padding-bottom: 1.25rem; }
+    .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.03em; }
+    .logo i { font-style: normal; color: var(--vibrant); }
+    nav a { color: var(--ink); text-decoration: none; font-weight: 500; margin-left: 1.5rem; }
+    nav a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 5px; text-decoration-color: var(--leaf); }
+
+    .hero { padding: 2.5rem 0 4.5rem; background: var(--pistachio); }
+    .hero .wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 3rem; align-items: center; }
+    .hero h1 { font-size: clamp(2.8rem, 7.5vw, 5.4rem); }
+    .hero p { font-size: 1.3rem; max-width: 30ch; color: #1d4d31; }
+    .btn { display: inline-block; font-family: var(--font); font-weight: 700; font-size: 1.1rem; border: 0; border-radius: 999px; padding: 0.9rem 2rem; cursor: pointer; text-decoration: none; background: var(--vibrant); color: #fff; transition: background 0.15s; }
+    .btn:hover { background: var(--forest); }
+    .btn:disabled { opacity: 0.7; cursor: wait; }
+
+    .canvas { background: #fff; border-radius: 1.75rem; padding: 1.75rem; box-shadow: 0 0 0 2px var(--mint); }
+    .canvas .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.25rem; font-weight: 500; }
+    .canvas .pct { font-size: 3.25rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em; color: var(--vibrant); }
+    .bar { height: 1rem; background: var(--mint); border-radius: 999px; overflow: hidden; }
+    .bar > span { display: block; height: 100%; width: 0; background: var(--vibrant); border-radius: 999px; transition: width 0.4s ease; }
+    .caption { margin: 1rem 0 0; font-size: 0.95rem; color: #2b5a3f; }
+
+    section.block { padding: 4rem 0 1rem; }
+    section.block h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); }
+    .lead { color: #1d4d31; max-width: 50ch; font-size: 1.15rem; }
+    .card { background: #fff; border-radius: 1.25rem; padding: 1.5rem; box-shadow: 0 0 0 2px var(--mint); }
+    .who { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; margin-top: 1.5rem; max-width: 40rem; }
+    label.field { display: block; font-weight: 700; margin-bottom: 0.35rem; }
+    input[type=text], select, textarea { width: 100%; font-family: var(--font); font-size: 1.05rem; color: var(--ink); background: #fff; border: 2px solid var(--light); border-radius: 0.8rem; padding: 0.75rem 1rem; }
+    textarea { min-height: 6rem; resize: vertical; }
+
+    .modules { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+    .module { border-left: 12px solid var(--c); border-radius: 0.5rem 1.25rem 1.25rem 0.5rem; }
+    .module h3 { font-size: 1.3rem; margin-bottom: 0.2rem; }
+    .status { font-size: 0.95rem; font-weight: 700; color: var(--deep); margin: 0 0 0.8rem; }
+    .lesson { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.6rem 0; border-top: 1px solid var(--mint); cursor: pointer; }
+    .lesson input { flex: none; width: 1.4rem; height: 1.4rem; margin-top: 0.15rem; accent-color: var(--vibrant); cursor: pointer; }
+
+    .report { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 1.5rem; margin-top: 2rem; align-items: start; }
+    .report .pct { font-size: 3.5rem; font-weight: 800; line-height: 1; color: var(--vibrant); letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+    .timeline { list-style: none; margin: 0; padding: 0; }
+    .timeline li { display: flex; gap: 0.8rem; padding: 0.55rem 0; border-top: 1px solid var(--mint); }
+    .timeline li:first-child { border-top: 0; }
+    .timeline .dot { flex: none; width: 1.1rem; height: 1.1rem; margin-top: 0.3rem; border-radius: 28%; background: var(--c); }
+    .timeline small { display: block; color: #2b5a3f; }
+    .empty { color: #2b5a3f; margin: 0; }
+
+    .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+    .charts h3 { font-size: 1.2rem; }
+    .legend { display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.95rem; font-weight: 700; margin-top: 0.5rem; }
+    .legend i { display: inline-block; width: 1.6rem; border-top: 3px solid var(--c); margin-right: 0.4rem; vertical-align: middle; }
+
+    .rate { display: flex; flex-wrap: wrap; gap: 0.6rem; border: 0; padding: 0; margin: 0 0 1.25rem; }
+    .rate legend { font-weight: 700; padding: 0; margin-bottom: 0.6rem; }
+    .rate label { position: relative; }
+    .rate input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .rate span { display: block; width: 6.2rem; padding: 0.8rem 0.4rem; text-align: center; border-radius: 1rem; font-weight: 700; line-height: 1.25; color: var(--ink); background: var(--c); box-shadow: inset 0 0 0 0 var(--ink); transition: box-shadow 0.12s; }
+    .rate span small { display: block; font-weight: 500; font-size: 0.85rem; }
+    .rate input:checked + span { box-shadow: inset 0 0 0 4px var(--ink); }
+    .rate input:focus-visible + span { outline: 3px solid var(--ink); outline-offset: 3px; }
+    .rate .w { color: #fff; }
+    .chip { background: var(--forest); color: #fff; border-radius: 999px; padding: 0.05rem 0.65rem; font-weight: 800; font-size: 0.95rem; }
+    .err { color: #a11a1a; font-weight: 700; margin: 0 0 1rem; }
+    .thanks { margin-top: 1rem; background: var(--mint); border-radius: 1rem; padding: 1rem 1.25rem; font-weight: 700; }
+    [hidden] { display: none !important; }
+
+    footer { margin-top: 0; background: var(--forest); color: var(--mint); padding: 2.25rem 0; }
+    footer p { margin: 0; }
+
+    .editor { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.25rem; margin-top: 1.5rem; }
+    .editor textarea { font-family: ui-monospace, Consolas, monospace; min-height: 12rem; margin-bottom: 1rem; background: var(--ink); color: var(--mint); border-color: var(--ink); }
+    .editor iframe { width: 100%; height: 14rem; border: 2px solid var(--light); border-radius: 0.8rem; background: #fff; }
+    .themes { display: flex; gap: 0.7rem; padding-top: 0.2rem; }
+    .sw { width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--ink); cursor: pointer; }
+    .sw[aria-pressed="true"] { box-shadow: 0 0 0 4px var(--ink); }
+    :root[data-theme="forest"] { --vibrant: #1B6F37; --pistachio: #BDEBA6; --sage: #D4EBD0; }
+    :root[data-theme="emerald"] { --vibrant: #17844F; --pistachio: #B8F0D2; --sage: #D5F3E3; }
+    #sprig { position: fixed; left: 1rem; bottom: 1rem; z-index: 5; display: flex; gap: 0.7rem; align-items: center; background: #fff; border-radius: 1rem; padding: 0.6rem 1rem; box-shadow: 0 0 0 2px var(--leaf); max-width: 19rem; font-weight: 700; font-size: 1rem; line-height: 1.3; }
+    #progress { background: var(--sage); padding-bottom: 4rem; margin-top: 3rem; }
+    #feedback { background: var(--mint); padding-bottom: 4rem; }
+
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+    @media print { header, .hero, #start, #path, #try, #sprig, #feedback, footer, .noprint { display: none !important; } body { background: #fff; } #progress { background: none; margin: 0; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <span class="logo">Coding in <i>Color</i></span>
+      <nav>
+        <a href="#path">Lessons</a>
+        <a href="#try">Try it</a>
+        <a href="#progress">My progress</a>
+        <a href="#feedback">Weekly survey</a>
+        <a href="rewards.html">Rewards <span class="chip" id="navTokens">0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <h1>Learn tech. Add color to your future.</h1>
+          <p>Start from zero. Work through six modules, watch your progress grow, and finish with a project you built yourself.</p>
+          <a class="btn" href="#start">Start learning</a>
+        </div>
+        <div class="canvas" aria-live="polite">
+          <div class="top"><span id="heroText">0 of 18 lessons</span><span class="pct" id="heroPct">0%</span></div>
+          <div class="bar" aria-hidden="true"><span id="heroBar"></span></div>
+          <p class="caption">Every lesson you finish moves the bar. Finish all 18 to complete the program.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="start">
+      <div class="wrap">
+        <h2>Who's learning today?</h2>
+        <p class="lead">Add your name so your report is yours. Everything stays on this device.</p>
+        <div class="who">
+          <div>
+            <label class="field" for="name">First name</label>
+            <input type="text" id="name" autocomplete="given-name" placeholder="Maya">
+          </div>
+          <div>
+            <label class="field" for="grade">Grade</label>
+            <select id="grade">
+              <option value="">Choose one</option>
+              <option>Kindergarten to 2nd grade</option>
+              <option>3rd to 5th grade</option>
+              <option>6th to 8th grade</option>
+              <option>9th to 12th grade</option>
+              <option>College</option>
+            </select>
+          </div>
+          <div>
+            <span class="field">Pick your color</span>
+            <div class="themes">
+              <button type="button" class="sw" data-t="" style="background:#238B45" aria-label="Meadow green"></button>
+              <button type="button" class="sw" data-t="forest" style="background:#1B6F37" aria-label="Forest green"></button>
+              <button type="button" class="sw" data-t="emerald" style="background:#17844F" aria-label="Emerald green"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="path">
+      <div class="wrap">
+        <h2>Six modules, first click to final project</h2>
+        <p class="lead">Tick a lesson when you finish it and watch your progress grow. Stuck? Ask a teacher or helper.</p>
+        <div class="modules" id="modules"></div>
+      </div>
+    </section>
+
+    <section class="block" id="try">
+      <div class="wrap">
+        <h2>Try it yourself</h2>
+        <p class="lead">Change the code and the page on the right updates as you type. Swap "green" for "tomato" or "#238B45" and see what happens.</p>
+        <div class="editor">
+          <div>
+            <label class="field" for="code">Your code</label>
+            <textarea id="code" spellcheck="false"></textarea>
+            <button class="btn" type="button" id="reset">Start over</button>
+          </div>
+          <div>
+            <span class="field">What it makes</span>
+            <iframe id="preview" title="Preview of your code" sandbox></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="progress">
+      <div class="wrap">
+        <h2 id="reportTitle">My progress so far</h2>
+        <p class="lead">Your journey from the first lesson to today.</p>
+        <div class="report">
+          <div class="card">
+            <p class="pct" id="reportPct">0%</p>
+            <p id="reportText"></p>
+            <p class="empty" id="reportMeta"></p>
+            <div class="bar" aria-hidden="true" style="margin:0 0 1.25rem"><span id="reportBar"></span></div>
+            <button class="btn noprint" type="button" id="print">Print my report</button>
+          </div>
+          <div class="card">
+            <h3>What I learned</h3>
+            <ol class="timeline" id="timeline"></ol>
+            <p class="empty" id="timelineEmpty">Nothing yet. Finish your first lesson and it lands here.</p>
+          </div>
+        </div>
+        <div class="charts">
+          <div class="card"><h3>Lessons by module</h3><div id="chartModules"></div></div>
+          <div class="card"><h3>Lessons finished over time</h3><div id="chartTime"></div></div>
+          <div class="card"><h3>How I'm feeling each week</h3><div id="chartSurvey"></div>
+            <div class="legend" id="surveyLegend" hidden>
+              <span><i style="--c:#238B45"></i>Program rating</span><span><i style="--c:#0F3320;border-top-style:dashed"></i>My confidence</span>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:1.5rem">
+          <label class="field" for="reflection">In my own words, the best thing I learned was...</label>
+          <textarea id="reflection" placeholder="Write a few sentences about what you learned and what you're proud of."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="feedback">
+      <div class="wrap">
+        <h2>Weekly survey: earn tokens</h2>
+        <p class="lead">Take one short survey a week and earn 10 tokens. Trade them on the <a href="rewards.html">Rewards page</a>. Your answers also help us show donors what is working.</p>
+        <p class="thanks" id="lockNote" hidden></p>
+        <form class="card" id="fbForm" novalidate style="margin-top:1.5rem">
+          <fieldset class="rate">
+            <legend>Pick a color for the program</legend>
+            <label><input type="radio" name="rating" value="1"><span style="--c:var(--mint)">1<small>Not good</small></span></label>
+            <label><input type="radio" name="rating" value="2"><span style="--c:var(--light)">2<small>Okay</small></span></label>
+            <label><input type="radio" name="rating" value="3"><span style="--c:var(--spring)">3<small>Good</small></span></label>
+            <label><input type="radio" name="rating" value="4"><span style="--c:var(--leaf)">4<small>Great</small></span></label>
+            <label><input type="radio" name="rating" value="5"><span class="w" style="--c:var(--vibrant)">5<small>Loved it</small></span></label>
+          </fieldset>
+          <label class="field" for="confidence">How confident do you feel using tech right now?</label>
+          <select id="confidence" style="margin-bottom:1rem"><option value="">Choose one</option><option value="1">1. Not confident yet</option><option value="2">2. A little</option><option value="3">3. Somewhat</option><option value="4">4. Pretty confident</option><option value="5">5. Very confident</option></select>
+          <label class="field" for="hours">How much time did you spend learning this week?</label>
+          <select id="hours" style="margin-bottom:1rem"><option value="">Choose one</option><option>Less than 1 hour</option><option>1 to 3 hours</option><option>3 to 5 hours</option><option>More than 5 hours</option></select>
+          <label class="field" for="liked">What helped you the most?</label>
+          <textarea id="liked" style="margin-bottom:1rem"></textarea>
+          <label class="field" for="change">What should we change?</label>
+          <textarea id="change" style="margin-bottom:1.25rem"></textarea>
+          <p class="err" id="fbErr" role="alert" hidden>Answer the first three questions to earn your tokens.</p>
+          <button class="btn" type="button" id="fbSend">Send feedback</button>
+        </form>
+        <p class="thanks" id="fbThanks" hidden>Thank you! Your feedback was saved.</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="sprig" role="status" hidden><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#62C875"/><circle cx="12" cy="15" r="2.5" fill="#0F3320"/><circle cx="22" cy="15" r="2.5" fill="#0F3320"/><path d="M11 21Q17 27 23 21" stroke="#0F3320" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg><span id="sprigText"></span></div>
+
+  <footer>
+    <div class="wrap"><p>Coding in Color. Free tech learning for every student. (v5) <a href="teacher.html" style="color:var(--mint)">Our impact</a>
+  </footer>
+
+  <script>
+    var COLORS = ["#1B6F37", "#238B45", "#36AD58", "#62C875", "#8FDC9B", "#C4EEC8"];
+    var MODULES = [
+      { title: "Computer basics", lessons: ["Parts of a computer", "Using the mouse and keyboard", "Saving and finding your files"] },
+      { title: "Staying safe online", lessons: ["Making a strong password", "Spotting scams and tricks", "Being kind online"] },
+      { title: "Typing and documents", lessons: ["Typing with the home row", "Writing your first document", "Making a slideshow"] },
+      { title: "Coding basics", lessons: ["What is a program?", "Loops and choices", "Finding and fixing a bug"] },
+      { title: "Build a website", lessons: ["Your first HTML page", "Adding color with CSS", "Putting your page online"] },
+      { title: "Final project", lessons: ["Plan your project", "Build it", "Show it off"] }
+    ];
+    var TOTAL = 18, KEY = "launchpad-v1";
+    var TOKENS_PER_SURVEY = 10, WEEK = 7 * 24 * 60 * 60 * 1000;
+    var state = { name: "", grade: "", done: {}, reflection: "", feedback: [], tokens: 0, lastSurvey: 0, redeemed: [], theme: "", studentId: "" };
+    try { var saved = JSON.parse(localStorage.getItem(KEY)); if (saved) state = Object.assign(state, saved); } catch (e) {}
+    var syncTimer;
+    function syncSoon() {
+      clearTimeout(syncTimer);
+      syncTimer = setTimeout(function () {
+        try { fetch("/api/progress", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId: state.studentId, name: state.name, grade: state.grade, done: state.done, tokens: state.tokens, redeemed: state.redeemed }) }).catch(function () {}); } catch (e) {}
+      }, 1500);
+    }
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} syncSoon(); }
+    if (!state.studentId) { state.studentId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now() + "-" + Math.random().toString(36).slice(2); save(); }
+    var $ = function (id) { return document.getElementById(id); };
+
+    function renderModules() {
+      var html = "";
+      MODULES.forEach(function (m, mi) {
+        var n = m.lessons.filter(function (_, li) { return state.done[mi + "-" + li]; }).length;
+        html += '<article class="card module" style="--c:' + COLORS[mi] + '"><h3>' + m.title + '</h3><p class="status">' + (n === 3 ? "Module complete" : n + " of 3 lessons done") + "</p>";
+        m.lessons.forEach(function (l, li) {
+          var id = mi + "-" + li;
+          html += '<label class="lesson" data-id="' + id + '"><input type="checkbox" data-id="' + id + '"' + (state.done[id] ? " checked" : "") + "><span>" + l + "</span></label>";
+        });
+        html += "</article>";
+      });
+      $("modules").innerHTML = html;
+    }
+
+    function fmt(ts) { return new Date(ts).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }); }
+
+    function line(el, series, o) {
+      var W = 480, H = 220, L = 34, R = 14, T = 12, B = 30, pw = W - L - R, ph = H - T - B;
+      var sx = function (x) { return o.x1 === o.x0 ? L + pw / 2 : L + (x - o.x0) / (o.x1 - o.x0) * pw; };
+      var sy = function (y) { return T + ph - (y - o.y0) / (o.y1 - o.y0) * ph; };
+      var h = '<svg viewBox="0 0 ' + W + " " + H + '" width="100%" role="img" aria-label="' + o.label + '">';
+      for (var v = o.y0; v <= o.y1; v += o.step) h += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + sy(v) + '" y2="' + sy(v) + '" stroke="#DCE6DE"/><text x="' + (L - 6) + '" y="' + (sy(v) + 4) + '" font-size="12" text-anchor="end" fill="#2b5a3f">' + v + "</text>";
+      o.ticks.forEach(function (t) { h += '<text x="' + sx(t[0]) + '" y="' + (H - 8) + '" font-size="12" text-anchor="middle" fill="#2b5a3f">' + t[1] + "</text>"; });
+      series.forEach(function (s) {
+        var d = s.pts.map(function (p, i) { return (i ? "L" : "M") + sx(p[0]) + " " + sy(p[1]); }).join(" ");
+        h += '<path d="' + d + '" fill="none" stroke="' + s.color + '" stroke-width="3" stroke-linejoin="round"' + (s.dash ? ' stroke-dasharray="7 5"' : "") + "/>";
+        s.pts.forEach(function (p) { h += '<circle cx="' + sx(p[0]) + '" cy="' + sy(p[1]) + '" r="4.5" fill="' + s.color + '"/>'; });
+      });
+      el.innerHTML = h + "</svg>";
+    }
+
+    function renderCharts() {
+      // 1. lessons per module
+      var h = '<svg viewBox="0 0 480 ' + (MODULES.length * 34 + 4) + '" width="100%" role="img" aria-label="Lessons finished in each module">';
+      MODULES.forEach(function (m, i) {
+        var n = m.lessons.filter(function (_, li) { return state.done[i + "-" + li]; }).length, y = i * 34 + 4;
+        h += '<text x="0" y="' + (y + 16) + '" font-size="14" fill="#0F3320">' + m.title + "</text>" +
+          '<rect x="170" y="' + y + '" width="250" height="20" rx="10" fill="#DCE6DE"/>' +
+          (n ? '<rect x="170" y="' + y + '" width="' + 250 * n / 3 + '" height="20" rx="10" fill="' + COLORS[i] + '"/>' : "") +
+          '<text x="432" y="' + (y + 16) + '" font-size="14" font-weight="700" fill="#0F3320">' + n + "/3</text>";
+      });
+      $("chartModules").innerHTML = h + "</svg>";
+
+      // 2. cumulative lessons over time
+      var times = Object.keys(state.done).map(function (k) { return state.done[k]; }).sort(function (a, b) { return a - b; });
+      if (!times.length) $("chartTime").innerHTML = '<p class="empty">Finish a lesson to start your line.</p>';
+      else line($("chartTime"), [{ color: "#238B45", pts: times.map(function (t, i) { return [t, i + 1]; }) }],
+        { label: "Lessons finished over time", x0: times[0], x1: times[times.length - 1], y0: 0, y1: 18, step: 6,
+          ticks: times.length > 1 ? [[times[0], fmt(times[0])], [times[times.length - 1], fmt(times[times.length - 1])]] : [[times[0], fmt(times[0])]] });
+
+      // 3. survey history
+      var fb = state.feedback;
+      $("surveyLegend").hidden = !fb.length;
+      if (!fb.length) $("chartSurvey").innerHTML = '<p class="empty">Take your first weekly survey to see this chart.</p>';
+      else line($("chartSurvey"), [
+        { color: "#238B45", pts: fb.map(function (r, i) { return [i, r.rating]; }) },
+        { color: "#0F3320", dash: true, pts: fb.map(function (r, i) { return [i, r.confidence]; }) }],
+        { label: "Program rating and confidence by week", x0: 0, x1: fb.length - 1, y0: 1, y1: 5, step: 1,
+          ticks: fb.map(function (r, i) { return [i, "Wk " + (i + 1)]; }) });
+    }
+
+    function renderProgress() {
+      var done = Object.keys(state.done).length, pct = Math.round(done / TOTAL * 100);
+      $("heroPct").textContent = pct + "%";
+      $("reportPct").textContent = pct + "%";
+      $("heroBar").style.width = pct + "%"; $("reportBar").style.width = pct + "%";
+      $("heroText").textContent = done + " of " + TOTAL + " lessons";
+      $("reportTitle").textContent = state.name ? state.name + "'s progress so far" : "My progress so far";
+      $("reportMeta").textContent = state.grade;
+      var mods = MODULES.filter(function (m, mi) { return m.lessons.every(function (_, li) { return state.done[mi + "-" + li]; }); }).length;
+      $("reportText").textContent = done === 0 ? "You are at the start. Finish a lesson to get going." :
+        done === TOTAL ? "You finished the whole program." :
+        done + " lessons and " + mods + " of 6 modules finished. Keep going.";
+      var items = [];
+      MODULES.forEach(function (m, mi) { m.lessons.forEach(function (l, li) { var ts = state.done[mi + "-" + li]; if (ts) items.push({ ts: ts, text: l, mod: m.title, c: COLORS[mi] }); }); });
+      items.sort(function (a, b) { return a.ts - b.ts; });
+      var tl = $("timeline"); tl.innerHTML = "";
+      items.forEach(function (it) {
+        var li = document.createElement("li"), dot = document.createElement("span"), box = document.createElement("div"), s = document.createElement("strong"), sm = document.createElement("small");
+        dot.className = "dot"; dot.style.setProperty("--c", it.c);
+        s.textContent = it.text; sm.textContent = it.mod + " · " + fmt(it.ts);
+        box.appendChild(s); box.appendChild(sm); li.appendChild(dot); li.appendChild(box); tl.appendChild(li);
+      });
+      $("timelineEmpty").hidden = items.length > 0;
+      renderCharts();
+    }
+
+    $("modules").addEventListener("change", function (e) {
+      var id = e.target.getAttribute("data-id");
+      if (!id) return;
+      if (e.target.checked) state.done[id] = Date.now(); else delete state.done[id];
+      save(); renderModules(); renderProgress();
+      if (e.target.checked) sprig();
+      var again = document.querySelector('input[data-id="' + id + '"]');
+      if (again) again.focus();
+    });
+
+    $("name").value = state.name; $("grade").value = state.grade; $("reflection").value = state.reflection;
+    $("name").addEventListener("input", function (e) { state.name = e.target.value.trim(); save(); renderProgress(); });
+    $("grade").addEventListener("change", function (e) { state.grade = e.target.value; save(); renderProgress(); });
+    $("reflection").addEventListener("input", function (e) { state.reflection = e.target.value; save(); });
+    $("print").addEventListener("click", function () { window.print(); });
+
+    function nextSurvey() { return state.lastSurvey + WEEK; }
+    function renderSurvey() {
+      $("navTokens").textContent = state.tokens;
+      var locked = Date.now() < nextSurvey();
+      $("fbForm").hidden = locked;
+      $("lockNote").hidden = !locked;
+      if (locked) $("lockNote").textContent = "You finished this week's survey and have " + state.tokens + " tokens. Your next survey opens on " + fmt(nextSurvey()) + ".";
+    }
+    $("fbForm").addEventListener("submit", function (e) { e.preventDefault(); });
+    $("fbSend").addEventListener("click", async function (e) {
+      e.preventDefault();
+      if (Date.now() < nextSurvey()) { renderSurvey(); return; }
+      var picked = document.querySelector('input[name="rating"]:checked');
+      if (!picked || !$("confidence").value || !$("hours").value) {
+        var missing = !picked ? "pick a color from 1 to 5" : !$("confidence").value ? "choose how confident you feel" : "choose how much time you spent learning";
+        $("fbErr").textContent = "Almost there! Please " + missing + " to earn your tokens.";
+        $("fbErr").hidden = false;
+        $("fbErr").scrollIntoView({ block: "center", behavior: "smooth" });
+        return;
+      }
+      $("fbErr").hidden = true;
+      var btn = $("fbSend");
+      btn.disabled = true; btn.textContent = "Sending...";
+      var rec = { when: Date.now(), studentId: state.studentId, grade: state.grade, lessonsDone: Object.keys(state.done).length, rating: Number(picked.value), confidence: Number($("confidence").value), hours: $("hours").value, liked: $("liked").value, change: $("change").value };
+      var sent = false;
+      try {
+        var ctrl = new AbortController(), timer = setTimeout(function () { ctrl.abort(); }, 6000);
+        var res = await fetch("/api/survey", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(rec), signal: ctrl.signal });
+        clearTimeout(timer);
+        if (res.status === 429) {
+          var j = await res.json(); state.lastSurvey = j.nextAt - WEEK; save();
+          btn.disabled = false; btn.textContent = "Send feedback"; renderSurvey(); return;
+        }
+        if (res.status === 400) {
+          $("fbErr").textContent = "Something in your answers wasn't accepted. Check them and try again.";
+          $("fbErr").hidden = false; btn.disabled = false; btn.textContent = "Send feedback"; return;
+        }
+        sent = res.ok;
+      } catch (err) {}
+      state.feedback.push(rec);
+      state.tokens += TOKENS_PER_SURVEY; state.lastSurvey = rec.when; save();
+      btn.disabled = false; btn.textContent = "Send feedback";
+      $("fbForm").hidden = true;
+      $("fbThanks").textContent = "Thank you! You earned " + TOKENS_PER_SURVEY + " tokens and now have " + state.tokens + "." + (sent ? "" : " (Saved on this device.)");
+      $("fbThanks").hidden = false;
+      $("navTokens").textContent = state.tokens;
+      renderProgress();
+    });
+    document.querySelectorAll('input[name="rating"]').forEach(function (r) { r.addEventListener("change", function () { $("fbErr").hidden = true; }); });
+
+    renderModules(); renderProgress(); renderSurvey();
+    function applyTheme() {
+      document.documentElement.setAttribute("data-theme", state.theme);
+      document.querySelectorAll(".sw").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-t") === state.theme)); });
+    }
+    document.querySelector(".themes").addEventListener("click", function (e) {
+      var t = e.target.getAttribute("data-t");
+      if (t === null) return;
+      state.theme = t; save(); applyTheme();
+    });
+
+    var sprigTimer;
+    function sprig() {
+      var done = Object.keys(state.done).length;
+      var lines = ["Nice work! Another lesson done.", "You're on a roll.", "One more lesson, one more color.", "That one counts. Keep going!"];
+      $("sprigText").textContent = done === TOTAL ? "You finished the whole program. Amazing!" : lines[done % lines.length];
+      $("sprig").hidden = false;
+      clearTimeout(sprigTimer);
+      sprigTimer = setTimeout(function () { $("sprig").hidden = true; }, 3500);
+    }
+
+    var START = '<h1 style="color: green;">Hello, world!</h1>\n<p>Change the color word above and watch me change.</p>';
+    function runCode() { $("preview").srcdoc = $("code").value; }
+    $("code").value = START;
+    $("code").addEventListener("input", runCode);
+    $("reset").addEventListener("click", function () { $("code").value = START; runCode(); });
+    runCode();
+    applyTheme();
+  </script>
+</body>
+</html>

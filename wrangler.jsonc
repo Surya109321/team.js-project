@@ -1,0 +1,11 @@
+{
+  "name": "coding-in-color-app",
+  "compatibility_date": "2026-11-01",
+  "main": "src/index.js",
+  "assets": {
+    "directory": "./public"
+  },
+  "ai": {
+    "binding": "AI"
+  }
+}
